@@ -7,7 +7,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -20,23 +19,8 @@ import { CalendarIcon, ArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sortOptions = [
-  { value: 'uploadDate', label: 'Upload Date' },
+  { value: 'date', label: 'Upload Date' },
   { value: 'name', label: 'File Name' },
-  { value: 'size', label: 'File Size' },
-];
-
-const fileTypes = [
-  { value: 'jpg', label: 'JPEG' },
-  { value: 'png', label: 'PNG' },
-  { value: 'gif', label: 'GIF' },
-  { value: 'webp', label: 'WebP' },
-];
-
-const sizeRanges = [
-  { min: 0, max: 1024 * 1024, label: '< 1MB' },
-  { min: 1024 * 1024, max: 5 * 1024 * 1024, label: '1-5MB' },
-  { min: 5 * 1024 * 1024, max: 10 * 1024 * 1024, label: '5-10MB' },
-  { min: 10 * 1024 * 1024, max: null, label: '> 10MB' },
 ];
 
 export default function FilterBar() {
@@ -46,26 +30,15 @@ export default function FilterBar() {
     sortOrder,
     setSortOrder,
     setDateRange,
-    setSizeRange,
-    setFileTypes,
   } = useGalleryStore();
 
   const [dateRange, setLocalDateRange] = useState({ from: null, to: null });
-  const [selectedFileTypes, setSelectedFileTypes] = useState([]);
 
   const handleDateSelect = (range) => {
     setLocalDateRange(range);
     if (range.from && range.to) {
       setDateRange({ start: range.from, end: range.to });
     }
-  };
-
-  const handleFileTypeToggle = (type) => {
-    const newTypes = selectedFileTypes.includes(type)
-      ? selectedFileTypes.filter(t => t !== type)
-      : [...selectedFileTypes, type];
-    setSelectedFileTypes(newTypes);
-    setFileTypes(newTypes);
   };
 
   return (
@@ -133,41 +106,6 @@ export default function FilterBar() {
             />
           </PopoverContent>
         </Popover>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">File Size</label>
-        <Select onValueChange={(value) => {
-          const range = sizeRanges.find(r => r.label === value);
-          setSizeRange(range ? { min: range.min, max: range.max } : null);
-        }}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select size range" />
-          </SelectTrigger>
-          <SelectContent>
-            {sizeRanges.map(range => (
-              <SelectItem key={range.label} value={range.label}>
-                {range.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm font-medium">File Types</label>
-        <div className="flex flex-wrap gap-2">
-          {fileTypes.map(type => (
-            <Button
-              key={type.value}
-              variant={selectedFileTypes.includes(type.value) ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleFileTypeToggle(type.value)}
-            >
-              {type.label}
-            </Button>
-          ))}
-        </div>
       </div>
     </div>
   );

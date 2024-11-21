@@ -23,9 +23,8 @@ const useGalleryStore = create((set, get) => ({
     const processedImages = (images || []).map(image => ({
       ...image,
       tags: Array.isArray(image.tags) ? image.tags : [],
-      // Use the presigned URL from backend
       url: image.url,
-      thumbnailUrl: image.url // Backend provides optimized URL
+      thumbnailUrl: image.url
     }));
     set({ images: processedImages });
     get().applyFilters();
@@ -117,9 +116,6 @@ const useGalleryStore = create((set, get) => ({
           break;
         case 'name':
           comparison = (a.fileName || '').localeCompare(b.fileName || '');
-          break;
-        case 'size':
-          comparison = (b.size || 0) - (a.size || 0);
           break;
         default:
           comparison = 0;
